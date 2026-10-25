@@ -1,0 +1,19 @@
+{
+  "name": "@flood/engine",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./presentation": "./src/presentation.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^24",
+    "typescript": "^5.6.0",
+    "vitest": "^3.2.4"
+  }
+}

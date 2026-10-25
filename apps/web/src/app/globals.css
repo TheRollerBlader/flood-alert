@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+:root {
+  --paper: #e6eef0;
+  --panel: #f6f3ec;
+  --ink: #142029;
+  --muted: #5c6b73;
+  --line: #d5ddd8;
+  --brand: #0f5f66;
+  --demo: #16324f;
+  --demo-ink: #f4f1ea;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-panel: var(--panel);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-brand: var(--brand);
+  --color-demo: var(--demo);
+  --color-demo-ink: var(--demo-ink);
+  --font-sans: var(--font-barlow), "Avenir Next", "Segoe UI", sans-serif;
+  --font-display: var(--font-barlow-condensed), "Arial Narrow", sans-serif;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.crossing-marker {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 2px solid white;
+  box-shadow: 0 1px 4px rgba(20, 32, 41, 0.35);
+  padding: 0;
+  cursor: pointer;
+}
+
+.crossing-marker[data-selected="true"] {
+  width: 26px;
+  height: 26px;
+  border-width: 3px;
+}
+
+.maplibregl-ctrl-attrib {
+  font-size: 11px;
+}
