@@ -28,6 +28,26 @@ Predicted water depth at low-water crossings in **Prosper**, **Frisco**, and **M
 
 ---
 
+## Application Interface & Live User Experience
+
+<div align="center">
+
+<img src="assets/ui_showcase_banner.png" alt="Flood Alert Web Dashboard and Mobile Application Interface" width="100%" />
+
+</div>
+
+The **Flood Alert** platform delivers real-time situational awareness through a cross-platform system: a high-performance **Next.js Web Dashboard** (MapLibre GL) and a native **Expo / React Native Mobile Application**. Approaching drivers receive early warnings, live water depth telemetry, and turn-by-turn safe detour routing.
+
+### Core User Interface Screens
+
+| Interface Component | Screenshot Preview | Functionality & Telemetry Display |
+| :--- | :--- | :--- |
+| **Interactive Web Dashboard** | <img src="assets/ui_web_dashboard.png" width="100%" alt="Flood Alert Interactive Web Dashboard" /> | High-performance vector map rendering all 8 monitored low-water crossings across Collin County with live USGS discharge badges, convective storm simulation toggles, and instant status filtering. |
+| **Telemetry & Crossing Detail** | <img src="assets/ui_crossing_detail.png" width="100%" alt="Crossing Detail Telemetry Panel" /> | Deep telemetry panel displaying verified water depth in feet and inches, upstream sensor lag ($\tau = 0\text{ to }90\text{ min}$), USGS streamflow hydrographs, and hydrodynamic vehicle clearance ratings. |
+| **1-Mile Proximity Geofencing Alert** | <img src="assets/ui_proximity_alert.png" width="100%" alt="Proximity Geofenced Emergency Alert Modal" /> | Automated GPS proximity trigger activating a full-screen **DO NOT ENTER** alert whenever a vehicle nears a hazardous crossing within 1.0 mile, presenting safe alternate bypass routes. |
+
+---
+
 ## System Architecture
 
 ```mermaid
