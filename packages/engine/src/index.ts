@@ -23,3 +23,13 @@ export type {
   HazardStatus,
   Mode,
 } from "./types";
+export {
+  mapHazardToSeverity,
+  formatCrossingAlertMessage,
+  isHydrologyAlertPayload,
+  filterEligibleRecipients,
+  type AlertSeverity,
+  type AlertContact,
+  type HydrologyAlertPayload,
+} from "./alertSchema";
+
