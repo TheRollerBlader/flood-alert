@@ -32,4 +32,9 @@ export {
   type AlertContact,
   type HydrologyAlertPayload,
 } from "./alertSchema";
+export {
+  HAZARD_DEPTH_THRESHOLDS_FT,
+  estimateCrossingThresholdEta,
+  type ThresholdEtaForecast,
+} from "./thresholdEta";
 
