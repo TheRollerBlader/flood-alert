@@ -37,4 +37,9 @@ export {
   estimateCrossingThresholdEta,
   type ThresholdEtaForecast,
 } from "./thresholdEta";
+export {
+  buildThresholdGaugeScale,
+  type StageBandSegment,
+  type ThresholdGaugeScale,
+} from "./thresholdStageScale";
 

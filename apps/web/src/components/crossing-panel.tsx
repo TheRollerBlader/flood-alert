@@ -5,6 +5,7 @@ import {
   STATUS_STYLES,
   type CrossingPrediction,
 } from "@flood/engine";
+import { FloodThresholdGauge } from "@/components/flood-threshold-gauge";
 
 function clock(iso: string) {
   const date = new Date(iso);
@@ -108,6 +109,7 @@ function CrossingDetail({
         <p className="text-lg text-white/90">{depth.inches}</p>
       </div>
       <div className="space-y-4 px-4 py-4 text-sm leading-6">
+        <FloodThresholdGauge crossing={crossing} />
         <p>{crossing.vehicleNote}</p>
         <dl className="grid grid-cols-2 gap-3">
           <div>
