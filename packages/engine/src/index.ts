@@ -42,4 +42,17 @@ export {
   type StageBandSegment,
   type ThresholdGaugeScale,
 } from "./thresholdStageScale";
+export {
+  NORTH_TEXAS_GAUGES,
+  evaluateFloodSeverity,
+  parseUsgsGageHeightSeries,
+  parseUsgsDischargeLatest,
+  analyzeStreamTelemetry,
+  usgsGageTelemetryUrl,
+  fetchUsgsGaugeTelemetry,
+  type GaugeThresholds,
+  type StreamGaugeStation,
+  type FloodRiskSeverity,
+  type GaugeTelemetryReading,
+} from "./usgsStreamTelemetry";
 

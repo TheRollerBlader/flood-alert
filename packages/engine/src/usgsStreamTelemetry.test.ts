@@ -1,8 +1,11 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import {
   evaluateFloodSeverity,
   parseUsgsGageHeightSeries,
+  parseUsgsDischargeLatest,
   analyzeStreamTelemetry,
+  usgsGageTelemetryUrl,
+  fetchUsgsGaugeTelemetry,
   NORTH_TEXAS_GAUGES,
 } from './usgsStreamTelemetry';
 
@@ -55,5 +58,51 @@ describe('usgsStreamTelemetry', () => {
     expect(reading?.dischargeCfs).toBe(450);
     expect(reading?.rateOfRiseFtPerHr).toBe(2.25);
     expect(reading?.severity).toBe('MINOR');
+  });
+
+  it('builds multi-parameter USGS URLs and fetches combined 00065/00060 telemetry', async () => {
+    const url = usgsGageTelemetryUrl(['08059800', '08051500'], 'PT12H');
+    expect(url).toContain('sites=08059800%2C08051500');
+    expect(url).toContain('parameterCd=00065%2C00060');
+    expect(url).toContain('period=PT12H');
+
+    const mockResponse = {
+      value: {
+        timeSeries: [
+          {
+            sourceInfo: { siteCode: [{ value: '08059800' }] },
+            variable: { variableCode: [{ value: '00065' }] },
+            values: [
+              {
+                value: [
+                  { dateTime: '2026-11-26T08:00:00Z', value: '13.5' },
+                  { dateTime: '2026-11-26T09:00:00Z', value: '16.2' },
+                ],
+              },
+            ],
+          },
+          {
+            sourceInfo: { siteCode: [{ value: '08059800' }] },
+            variable: { variableCode: [{ value: '00060' }] },
+            values: [{ value: [{ dateTime: '2026-11-26T09:00:00Z', value: '820.0' }] }],
+          },
+        ],
+      },
+    };
+
+    expect(parseUsgsDischargeLatest(mockResponse, '08059800')).toBe(820);
+
+    const fetchMock = vi.fn(async () => ({
+      ok: true,
+      status: 200,
+      json: async () => mockResponse,
+    })) as unknown as typeof fetch;
+
+    const readings = await fetchUsgsGaugeTelemetry(['08059800'], { fetchImpl: fetchMock });
+    expect(readings).toHaveLength(1);
+    expect(readings[0].gageHeightFt).toBe(16.2);
+    expect(readings[0].dischargeCfs).toBe(820);
+    expect(readings[0].rateOfRiseFtPerHr).toBe(2.7);
+    expect(readings[0].severity).toBe('MINOR');
   });
 });

@@ -123,3 +123,70 @@ export function analyzeStreamTelemetry(
     severity,
   };
 }
+
+export function usgsGageTelemetryUrl(
+  siteIds: string[] = Object.keys(NORTH_TEXAS_GAUGES),
+  period = 'PT6H'
+): string {
+  const params = new URLSearchParams({
+    format: 'json',
+    sites: siteIds.join(','),
+    parameterCd: '00065,00060',
+    period,
+  });
+  return `https://waterservices.usgs.gov/nwis/iv/?${params.toString()}`;
+}
+
+export function parseUsgsDischargeLatest(payload: any, targetSiteId: string): number | null {
+  const series = payload?.value?.timeSeries ?? [];
+  for (const s of series) {
+    const site = s.sourceInfo?.siteCode?.[0]?.value;
+    const variable = s.variable?.variableCode?.[0]?.value;
+    if (site !== targetSiteId || variable !== '00060') continue;
+    const values = s.values?.[0]?.value ?? [];
+    for (let i = values.length - 1; i >= 0; i--) {
+      const val = parseFloat(values[i]?.value);
+      if (Number.isFinite(val) && val >= 0) return val;
+    }
+  }
+  return null;
+}
+
+export async function fetchUsgsGaugeTelemetry(
+  siteIds: string[] = Object.keys(NORTH_TEXAS_GAUGES),
+  options: {
+    fetchImpl?: typeof fetch;
+    timeoutMs?: number;
+    period?: string;
+  } = {}
+): Promise<GaugeTelemetryReading[]> {
+  if (siteIds.length === 0) return [];
+  const fetchFn = options.fetchImpl ?? fetch;
+  const timeoutMs = options.timeoutMs ?? 8000;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetchFn(usgsGageTelemetryUrl(siteIds, options.period), {
+      signal: controller.signal,
+      headers: { Accept: 'application/json' },
+    });
+    if (!response.ok) {
+      throw new Error(`USGS IV request failed with HTTP ${response.status}`);
+    }
+    const payload = await response.json();
+    const readings: GaugeTelemetryReading[] = [];
+
+    for (const siteId of siteIds) {
+      const heightHistory = parseUsgsGageHeightSeries(payload, siteId);
+      const latestDischarge = parseUsgsDischargeLatest(payload, siteId);
+      const reading = analyzeStreamTelemetry(siteId, heightHistory, latestDischarge);
+      if (reading) {
+        readings.push(reading);
+      }
+    }
+    return readings;
+  } finally {
+    clearTimeout(timer);
+  }
+}
