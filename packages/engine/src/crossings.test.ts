@@ -57,24 +57,34 @@ describe("Crossings and Gauges Registry", () => {
   });
 
   it("converts crossing predictions into GeoJSON FeatureCollection with point coordinates", () => {
+    const nowIso = new Date().toISOString();
     const mockPredictions: CrossingPrediction[] = CROSSINGS.slice(0, 3).map((c) => ({
-      ...c,
+      id: c.id,
+      name: c.name,
+      road: c.road,
+      creek: c.creek,
+      city: c.city,
+      latitude: c.latitude,
+      longitude: c.longitude,
+      placeDetail: c.placeDetail,
+      lwxType: c.lwxType,
+      sourceObjectId: c.sourceObjectId,
+      gaugeId: c.gaugeId,
+      gaugeName: c.gaugeName,
+      gaugeNote: c.gaugeNote,
+      depthFt: 1.2,
+      depthInches: 14.4,
       status: "watch",
-      trend: "rising",
-      crestDepthFt: 1.2,
-      estimatedTimeUntilCrestMinutes: 45,
-      peakWindowStart: new Date().toISOString(),
-      peakWindowEnd: new Date(Date.now() + 3600000).toISOString(),
-      confidence: 0.88,
-      recommendedAction: "Exercise caution at low-water crossings",
-      rationale: ["Upstream USGS gauge discharge increasing rapidly"],
-      summary: "Potential overflow expected within the hour",
-      modelComponents: {
-        rainfallDepthFt: 0.4,
-        upstreamDepthFt: 0.8,
-        adjustedDischargeCfs: 140,
-        historicalDischargeCfs: 40,
-      },
+      statusLabel: "Watch",
+      vehicleNote: "Exercise caution at low-water crossings",
+      dischargeCfs: 140,
+      dischargeAt: nowIso,
+      rainfallInches: 0.4,
+      rainfallLabel: "0.40 in",
+      rainfallNote: "Upstream USGS gauge discharge increasing rapidly",
+      updatedAt: nowIso,
+      mode: "demo",
+      disclaimer: "Model estimate for situational awareness.",
     }));
 
     const geojson = toGeoJSON(mockPredictions);
